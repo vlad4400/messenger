@@ -1,8 +1,12 @@
 import React from 'react';
 import Message from './Message.jsx';
 
-export default class App extends React.Component {
+export default class MessageField extends React.Component {
     render() {
-        return this.props.messages.map((message, index) => <Message key={ index } message={ message }/>)
+        return (
+            <div className='message-field'>
+                { this.props.messages.map((message, index) => <Message key={ index } sender={ message.sender } text={ message.text }/>) }
+            </div>
+        )
     }
 }

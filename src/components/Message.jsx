@@ -3,9 +3,12 @@ import React from 'react';
 export default class Message extends React.Component {
     render() {
         return (
-            <div>
-                <span>[{ this.props.message.sender }] </span>
-                <span>{ this.props.message.text }</span>
+            <div 
+                className="message"
+                style={ { alignSelf: this.props.sender === 'bot' ? 'flex-start' : 'flex-end' } }
+            >
+                <div>{ this.props.text }</div>
+                <div className="message-sender">{ this.props.sender }</div>
             </div>
         )
     }
