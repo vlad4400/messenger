@@ -7,10 +7,6 @@ module.exports = {
         app: "./index.jsx"
     },
     context: path.resolve(__dirname, "src"),
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "app.js"
-    },
     devServer: {
         contentBase: path.join(__dirname,"dist"),
         port: 9000
@@ -21,9 +17,21 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 loader: "babel-loader",
                 options: {
-                    presets: ["@babel/env", "@babel/react"]
+                    presets: ["@babel/env", "@babel/react"],
+                    plugins: [
+                        [
+                            "@babel/plugin-proposal-class-properties",
+                            {
+                                "loose": true
+                            }
+                        ]
+                    ]
                 }
             }
         ]
+    },
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "app.js"
     }
 }
