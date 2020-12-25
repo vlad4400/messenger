@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -11,6 +12,12 @@ module.exports = {
         contentBase: path.join(__dirname,"dist"),
         port: 9000
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./index.html"
+        }),
+        new CleanWebpackPlugin()
+    ],
     module: {
         rules: [
             {
@@ -27,6 +34,10 @@ module.exports = {
                         ]
                     ]
                 }
+            },
+            {
+                test: /\.(html)$/,
+                use: ["html-loader"]
             }
         ]
     },
