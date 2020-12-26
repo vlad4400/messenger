@@ -41,6 +41,11 @@ export default class App extends React.Component {
             this.setState({ message: '' })
         }
     }
+
+    doScrollToDown() {
+        let messageField = document.getElementsByClassName('message-field')[0];
+        messageField.scrollTo(0, messageField.scrollHeight);
+    }
     
     render() {
         return (
@@ -74,13 +79,12 @@ export default class App extends React.Component {
 
     componentDidUpdate() {
         this.textInput.current.focus();
-        var t = setTimeout(() =>
-            {
+        this.doScrollToDown();
+        var t = setTimeout(() => {
                 if (this.state.messages[this.state.messages.length - 1].sender !== 'bot') {
-                    this.setState({ messages: [ ...this.state.messages, {sender: 'bot', text: "Don't bother me, I'm a robot!"} ] })
+                    this.setState({ messages: [ ...this.state.messages, {sender: 'bot', text: "Don't bother me, I'm a robot!"} ] });
                 }
-            }, 
-            1000
+            }, 1000
         );
     }
 }
