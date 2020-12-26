@@ -36,7 +36,7 @@ export default class App extends React.Component {
     }
 
     sendMessage() {
-        {
+        if (this.state.message) {
             this.setState({ messages: [ ...this.state.messages, {sender: 'me', text: this.state.message} ] });
             this.setState({ message: '' })
         }
