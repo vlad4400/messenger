@@ -19,14 +19,29 @@ export default class App extends React.Component {
         ]
     };
 
-    handleClick = () => {
-        var text = document.getElementsByName("message")[0].value;
-        if (text) {
-            document.getElementsByName("message")[0].value = "";
-            this.setState({ messages: [ ...this.state.messages, {sender: 'me', text} ] });
-        }
+    textInput = React.createRef();
+
+    handleClick = (message) => {
+        this.sendMessage();
     };
 
+    handleChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+    };
+
+    handleKeyUp = (event) => {
+        if (event.keyCode === 13) {
+            this.sendMessage();
+        }
+    }
+
+    sendMessage() {
+        {
+            this.setState({ messages: [ ...this.state.messages, {sender: 'me', text: this.state.message} ] });
+            this.setState({ message: '' })
+        }
+    }
+    
     render() {
         return (
             <div className="layout">
@@ -36,10 +51,14 @@ export default class App extends React.Component {
                 <div className="grid-textfield" style={ { width: '100%', display: 'flex', marginTop: 10, marginBottom: 15} }>
                     <TextField
                         name="message"
+                        ref={ this.textInput }
                         style={ { fontSize: '22px', width: '100%', height: 'none', paddingLeft: 20, paddingRight: 20} }
+                        value={ this.state.message ? this.state.message : '' }
+                        onChange={ this.handleChange }
+                        onKeyUp={ this.handleKeyUp }
                     />
                     <FloatingActionButton 
-                        onClick={ this.handleClick }
+                        onClick={ () => this.handleClick() }
                         mini
                     >
                         <SendIcon />
@@ -49,7 +68,12 @@ export default class App extends React.Component {
         )
     }
 
+    componentDidMount() {
+        this.textInput.current.focus();
+    }
+
     componentDidUpdate() {
+        this.textInput.current.focus();
         var t = setTimeout(() =>
             {
                 if (this.state.messages[this.state.messages.length - 1].sender !== 'bot') {
