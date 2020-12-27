@@ -80,7 +80,7 @@ export default class App extends React.Component {
     componentDidUpdate() {
         this.textInput.current.focus();
         this.doScrollToDown();
-        var t = setTimeout(() => {
+        setTimeout(() => {
                 if (this.state.messages[this.state.messages.length - 1].sender !== 'bot') {
                     this.setState({ messages: [ ...this.state.messages, {sender: 'bot', text: "Don't bother me, I'm a robot!"} ] });
                 }
