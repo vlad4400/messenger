@@ -5,7 +5,12 @@ export default class MessageField extends React.Component {
     render() {
         return (
             <div className={ this.props.className + ' message-field'}>
-                { this.props.messages.map((message, index) => <Message key={ index } sender={ message.sender } text={ message.text }/>) }
+                { this.props.messageList.map((messageIndex, index) => 
+                    <Message 
+                        key={ index } 
+                        sender={ this.props.messages[messageIndex].sender } 
+                        text={ this.props.messages[messageIndex].text }
+                    />) }
             </div>
         )
     }

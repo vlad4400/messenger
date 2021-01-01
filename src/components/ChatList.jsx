@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {List, ListItem} from 'material-ui/List';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Avatar from 'material-ui/Avatar';
@@ -10,31 +11,17 @@ export default class ChatList extends React.Component {
                 className={ this.props.className }
                 style={ { overflowY: 'scroll' } }
             >
-                <ListItem
-                    primaryText="User Name 1"
-                    rightIcon={<CommunicationChatBubble />}
-                    leftAvatar={<Avatar src="" />}
-                />
-                <ListItem
-                    primaryText="User Name 2"
-                    rightIcon={<CommunicationChatBubble />}
-                    leftAvatar={<Avatar src="" />}
-                />
-                <ListItem
-                    primaryText="User Name 3"
-                    rightIcon={<CommunicationChatBubble />}
-                    leftAvatar={<Avatar src="" />}
-                />
-                <ListItem
-                    primaryText="User Name 4"
-                    rightIcon={<CommunicationChatBubble />}
-                    leftAvatar={<Avatar src="" />}
-                />
-                <ListItem
-                    primaryText="User Name 5"
-                    rightIcon={<CommunicationChatBubble />}
-                    leftAvatar={<Avatar src="" />}
-                />
+                {
+                    Object.keys(this.props.chats).map((chatIndex) =>
+                        <Link key={ chatIndex } to={`/chat/${chatIndex}/`}>
+                            <ListItem
+                                primaryText={ this.props.chats[chatIndex].userName }
+                                rightIcon={<CommunicationChatBubble />}
+                                leftAvatar={<Avatar src="" />}
+                            />
+                        </Link>
+                    )
+                }
             </List>
         )
     }
