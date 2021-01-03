@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import ChatList from './ChatList.jsx';
 import Header from './Header.jsx';
 import MessageField from './MessageField.jsx';
@@ -24,13 +25,28 @@ export default class Layout extends React.Component {
         messages: {
             1: { sender: 'bot', text: "Hi!" },
             2: { sender: 'bot', text: "How are you?" },
-        }
+        },
+        redirect: ''
     };
 
     refInput = React.createRef();
 
+    changeChat = (chatId) => {
+        this.setState({ redirect: `/chat/${chatId}/` });
+    }
+
+    addChat = (userName) => {
+        const { chats } = this.state;
+
+        const chatId = Object.keys(chats).length + 1;
+        this.setState({
+            chats: {...chats, [chatId]: {userName, messageList: [], message: ''}}
+        });
+        this.changeChat(chatId);
+    };
+
     handleClick = () => {
-        this.handleSendMessage('me');
+        this.handleSendMessage();
         this.refInput.current.focus();
     };
 
@@ -46,44 +62,57 @@ export default class Layout extends React.Component {
 
     handleKeyUp = (event) => {
         if (event.keyCode === 13) {
-            this.handleSendMessage('me');
+            this.handleSendMessage();
         }
     }
 
-    handleSendMessage(sender, message = this.state.chats[this.props.chatId].message) {
+    handleSendMessage() {
         const { messages, chats } = this.state;
         const { chatId } = this.props;
+        const sender = 'me';
+        const message = this.state.chats[this.props.chatId].message;
+
         const messageId = ++Object.keys(messages).length;
 
-        if (sender === 'bot') {
-            this.setState({ messages: { ...messages, [messageId]: {sender, text: message} } });
-            this.setState({ chats: {...chats, [chatId]: {
-                ...chats[chatId], 
-                messageList: [...chats[chatId].messageList, messageId]
-            } } });
-        } else if (message) {
-            const messageId = ++Object.keys(messages).length;
-            this.setState({ messages: { ...messages, [messageId]: {sender, text: message} } });
-            this.setState({ chats: {...chats, [chatId]: {
-                ...chats[chatId], 
-                messageList: [...chats[chatId].messageList, messageId],
-                message: ''
-            } } });
-        }
+        this.setState({ messages: { ...messages, [messageId]: {sender, text: message} } });
+        this.setState({ chats: {...chats, [chatId]: {
+            ...chats[chatId], 
+            messageList: [...chats[chatId].messageList, messageId],
+            message: ''
+        } } });
+    }
+
+    handleSendMessageBot(chatId, message) {
+        const { messages, chats } = this.state;
+        const messageId = ++Object.keys(messages).length;
+        const sender = 'bot';
+
+        this.setState({ messages: { ...messages, [messageId]: {sender, text: message} } });
+        this.setState({ chats: {...chats, [chatId]: {
+            ...chats[chatId], 
+            messageList: [...chats[chatId].messageList, messageId]
+        } } });
     }
 
     doScrollToDown() {
         let messageField = document.getElementsByClassName('message-field')[0];
         messageField.scrollTo(0, messageField.scrollHeight);
     }
-    
+
     render() {
+        if (!this.state.chats[this.props.chatId]) {
+            return <Redirect to={'/'} />
+        }
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
         return (
             <div className="layout">
                 <ChatList 
                     chats={ this.state.chats }
                     userName={ this.state.chats[this.props.chatId].userName } 
                     className="grid-chatlist"
+                    addChat={ this.addChat }
                 />
                 <Header userName={ this.state.chats[this.props.chatId].userName } className="grid-header"/>
                 <MessageField 
@@ -113,18 +142,42 @@ export default class Layout extends React.Component {
     }
 
     componentDidMount() {
-        this.refInput.current.focus();
+        try {
+            this.refInput.current.focus();
+        } catch (e) {
+            console.log('Focus not set');
+        }
     }
 
     componentDidUpdate() {
-        this.refInput.current.focus();
-        this.doScrollToDown();
+        if (this.state.redirect) {
+            this.setState({redirect: ''});
+        }
         
-        setTimeout(() => {
-                if (this.state.messages[Object.keys(this.state.messages).length].sender !== 'bot') {
-                    this.handleSendMessage('bot', "Don't bother me, I'm a robot!");
-                }
-            }, 1000
-        );
+        try {
+            this.refInput.current.focus();
+            this.doScrollToDown();
+        } catch (e) {
+            console.log('Focus not set');
+        }
+        
+        let myFunction = () => {
+            let chatId = this.props.chatId;
+            let previousMessageId = this.state.chats[chatId].messageList.slice(-1)[0]
+            
+            setTimeout(() => {
+                    let messageId = this.state.chats[chatId].messageList.slice(-1)[0]; //to get last array's element
+                    if (messageId && previousMessageId === messageId) {
+                        let sender = this.state.messages[messageId].sender;
+
+                        if (sender !== 'bot') {
+                            this.handleSendMessageBot(chatId, "Don't bother me, I'm a robot!");
+                        }
+                    }
+                }, 1000
+            );
+        }
+
+        myFunction();
     }
 }

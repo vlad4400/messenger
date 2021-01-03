@@ -1,10 +1,40 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Link, Redirect } from 'react-router-dom';
 import {List, ListItem} from 'material-ui/List';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Avatar from 'material-ui/Avatar';
+import { TextField } from 'material-ui';
+import AddIcon from 'material-ui/svg-icons/content/add';
 
 export default class ChatList extends React.Component {
+    static propTypes = {
+        addChat: PropTypes.func.isRequired
+    }
+
+    state = {
+        newChatInput: '',
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
+
+    handleKeyUp = (event) => {
+        if (event.keyCode === 13) { //Enter
+            this.handleAddChat();
+        }
+    }
+
+    handleAddChat = () => {
+        if (this.state.newChatInput.length > 0) {
+            this.props.addChat(this.state.newChatInput);
+            this.setState({ newChatInput: '' });
+        }
+    }
+
     render() {
         return (
             <List
@@ -22,6 +52,21 @@ export default class ChatList extends React.Component {
                         </Link>
                     )
                 }
+                <ListItem
+                    key="Add new chat"
+                    leftAvatar={ <Avatar src="" /> }
+                    rightIcon={ <AddIcon onClick={ this.handleAddChat } /> }
+                    style={ { height: '60px' } }
+                    children= {<TextField
+                        key="textField"
+                        fullWidth
+                        name="newChatInput"
+                        hintText="Add new chat"
+                        onChange={ this.handleChange }
+                        value={ this.state.newChatInput }
+                        onKeyUp={ this.handleKeyUp }
+                    />}
+                />
             </List>
         )
     }
