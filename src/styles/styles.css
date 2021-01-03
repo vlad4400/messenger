@@ -1,3 +1,12 @@
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+a:hover {
+    color: #eee;
+}
+
 .message-field {
     display: flex;
     flex-direction: column;
@@ -7,29 +16,53 @@
     overflow-y: scroll;
 }
 
+.grid-header {
+    grid-area: grid-header;
+}
+.grid-chatlist {
+    grid-area: grid-chatlist;
+}
+.grid-headerinfo {
+    grid-area: grid-headerinfo;
+}
+.grid-messagefield {
+    grid-area: grid-messagefield;
+}
+.grid-textfield {
+    grid-area: grid-textfield;
+}
+
 .layout {
     height: 100%;
     width: 70%;
     margin: auto;
     display: grid;
+    
+    grid-template-areas:
+    "grid-header grid-header"
+    "grid-chatlist grid-headerinfo"
+    "grid-chatlist grid-messagefield"
+    "grid-chatlist grid-textfield";
+    
     grid-template-columns: 30% 70%;
-    grid-template-rows: 64px auto 64px;
+    grid-template-rows: 64px 56px auto 64px;
 }
 
-.grid-chatlist {
-    grid-area: 1 / 1 / 4 / 2;
+.header-profile,
+.header-chats {
+    margin: 0 20px;
 }
 
-.grid-header {
-    grid-area: 1 / 2 / 2 / 3;
+.grid-card {
+    grid-area: grid-card;
 }
 
-.grid-messagefield {
-    grid-area: 2 / 2 / 3 / 3;
-}
-
-.grid-textfield {
-    grid-area: 3 / 2 / 4 / 3;
+.profile {
+    grid-template-areas:
+    "grid-header grid-header"
+    "grid-card grid-card"
+    "grid-card grid-card"
+    "grid-card grid-card";
 }
 
 .message {

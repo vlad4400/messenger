@@ -1,25 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
 import AppBar from 'material-ui/AppBar';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconButton from 'material-ui/IconButton';
+// import IconButton from 'material-ui/IconButton';
+// import NavigationExpandMore from 'material-ui/svg-icons/navigation/menu';
 
 export default class Header extends React.Component {
-    static propTypes = {
-        userName: PropTypes.string
-    };
-
-    static defaultProps = {
-        chatId: 1,
-    };
-
     render() {
         return (
             <AppBar
-                title={ this.props.userName }
                 className={ this.props.className }
-                iconElementRight={ <IconButton><MoreVertIcon /></IconButton>}
+                title={ 
+                    <>
+                        <Link to={`/profile/`}>
+                            <span className="header-profile">Profile</span>
+                        </Link>
+                        <span> | </span>
+                        <Link to={`/chat/`}>
+                            <span className="header-chats">Chats</span>
+                        </Link>
+                    </> 
+                }
                 iconElementLeft={<></>}
+                // iconElementLeft={<IconButton><NavigationExpandMore /></IconButton>}
             />
         )
     }

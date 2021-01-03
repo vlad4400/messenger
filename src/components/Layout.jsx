@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import ChatList from './ChatList.jsx';
 import Header from './Header.jsx';
+import ChatList from './ChatList.jsx';
+import HeaderInfo from './HeaderInfo.jsx';
 import MessageField from './MessageField.jsx';
 import { TextField, FloatingActionButton } from 'material-ui';
 import SendIcon from 'material-ui/svg-icons/content/send';
@@ -108,13 +109,19 @@ export default class Layout extends React.Component {
         }
         return (
             <div className="layout">
+                <Header 
+                    className="grid-header"
+                />
                 <ChatList 
                     chats={ this.state.chats }
                     userName={ this.state.chats[this.props.chatId].userName } 
                     className="grid-chatlist"
                     addChat={ this.addChat }
                 />
-                <Header userName={ this.state.chats[this.props.chatId].userName } className="grid-header"/>
+                <HeaderInfo 
+                    className='grid-headerinfo'
+                    userName={ this.state.chats[this.props.chatId].userName }
+                />
                 <MessageField 
                     className="grid-messagefield" 
                     messages={ this.state.messages } 
@@ -153,7 +160,7 @@ export default class Layout extends React.Component {
         if (this.state.redirect) {
             this.setState({redirect: ''});
         }
-        
+
         try {
             this.refInput.current.focus();
             this.doScrollToDown();

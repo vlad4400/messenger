@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {List, ListItem} from 'material-ui/List';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Avatar from 'material-ui/Avatar';
