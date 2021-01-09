@@ -1,16 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import connect from 'react-redux/es/connect/connect';
+
+import { addChat } from '../actions/chatActions';
+import { sendMessage, saveInput } from '../actions/messageActions';
 import Header from './Header.jsx';
 import ChatList from './ChatList.jsx';
 import HeaderInfo from './HeaderInfo.jsx';
 import MessageField from './MessageField.jsx';
+
 import { TextField, FloatingActionButton } from 'material-ui';
 import SendIcon from 'material-ui/svg-icons/content/send';
 
-export default class Layout extends React.Component {
+class Layout extends React.Component {
     static propTypes = {
-        chatId: PropTypes.number
+        chatId: PropTypes.number,
+        addChat: PropTypes.func.isRequired,
+        sendMessage: PropTypes.func.isRequired,
+        saveInput: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -18,15 +27,6 @@ export default class Layout extends React.Component {
     }
 
     state = {
-        chats: {
-            1: {userName: 'User Name 1', messageList: [1, 2], message: ''},
-            2: {userName: 'User Name 2', messageList: [], message: ''},
-            3: {userName: 'User Name 3', messageList: [], message: ''},
-        },
-        messages: {
-            1: { sender: 'bot', text: "Hi!" },
-            2: { sender: 'bot', text: "How are you?" },
-        },
         redirect: ''
     };
 
@@ -37,12 +37,10 @@ export default class Layout extends React.Component {
     }
 
     addChat = (userName) => {
-        const { chats } = this.state;
-
+        const { chats } = this.props.store;
         const chatId = Object.keys(chats).length + 1;
-        this.setState({
-            chats: {...chats, [chatId]: {userName, messageList: [], message: ''}}
-        });
+
+        this.props.addChat(userName);
         this.changeChat(chatId);
     };
 
@@ -52,13 +50,10 @@ export default class Layout extends React.Component {
     };
 
     handleChange = (event) => {
-        const { chats } = this.state;
         const { chatId } = this.props;
+        const input = event.target.value;
 
-        this.setState({ chats: {...chats, [chatId]: {
-            ...chats[chatId], 
-            message: event.target.value
-        } } });
+        this.props.saveInput(chatId, input);
     };
 
     handleKeyUp = (event) => {
@@ -68,31 +63,23 @@ export default class Layout extends React.Component {
     }
 
     handleSendMessage() {
-        const { messages, chats } = this.state;
+        const { messages } = this.props.store.messages;
         const { chatId } = this.props;
         const sender = 'me';
-        const message = this.state.chats[this.props.chatId].message;
+        const message = this.props.store.chats[this.props.chatId].input;
+        const messageId = ++Object.keys(this.props.store.messages).length;
 
-        const messageId = ++Object.keys(messages).length;
-
-        this.setState({ messages: { ...messages, [messageId]: {sender, text: message} } });
-        this.setState({ chats: {...chats, [chatId]: {
-            ...chats[chatId], 
-            messageList: [...chats[chatId].messageList, messageId],
-            message: ''
-        } } });
+        if (message) {
+            this.props.sendMessage(messageId, sender, message, chatId, messages);
+        }
     }
 
     handleSendMessageBot(chatId, message) {
-        const { messages, chats } = this.state;
-        const messageId = ++Object.keys(messages).length;
+        const { messages } = this.props.store.messages;
+        const messageId = ++Object.keys(this.props.store.messages).length;
         const sender = 'bot';
 
-        this.setState({ messages: { ...messages, [messageId]: {sender, text: message} } });
-        this.setState({ chats: {...chats, [chatId]: {
-            ...chats[chatId], 
-            messageList: [...chats[chatId].messageList, messageId]
-        } } });
+        this.props.sendMessage(messageId, sender, message, chatId, messages);
     }
 
     doScrollToDown() {
@@ -101,7 +88,7 @@ export default class Layout extends React.Component {
     }
 
     render() {
-        if (!this.state.chats[this.props.chatId]) {
+        if (!this.props.store.chats[this.props.chatId]) {
             return <Redirect to={'/'} />
         }
         if (this.state.redirect) {
@@ -113,27 +100,27 @@ export default class Layout extends React.Component {
                     className="grid-header"
                 />
                 <ChatList 
-                    chats={ this.state.chats }
-                    userName={ this.state.chats[this.props.chatId].userName } 
+                    chats={ this.props.store.chats }
+                    userName={ this.props.store.chats[this.props.chatId].userName } 
                     className="grid-chatlist"
                     addChat={ this.addChat }
                 />
                 <HeaderInfo 
                     className='grid-headerinfo'
-                    userName={ this.state.chats[this.props.chatId].userName }
+                    userName={ this.props.store.chats[this.props.chatId].userName }
                 />
                 <MessageField 
                     className="grid-messagefield" 
-                    messages={ this.state.messages } 
-                    userName={ this.state.chats[this.props.chatId].userName }
-                    messageList={ this.state.chats[this.props.chatId].messageList }
+                    messages={ this.props.store.messages } 
+                    userName={ this.props.store.chats[this.props.chatId].userName }
+                    messageList={ this.props.store.chats[this.props.chatId].messageList }
                 />
                 <div className="grid-textfield" style={ { width: '100%', display: 'flex', marginTop: 10, marginBottom: 15} }>
                     <TextField
-                        name="message"
+                        name="input"
                         ref={ this.refInput }
                         style={ { fontSize: '22px', width: '100%', height: 'none', paddingLeft: 20, paddingRight: 20} }
-                        value={ this.state.chats[this.props.chatId].message }
+                        value={ this.props.store.chats[this.props.chatId].input }
                         onChange={ this.handleChange }
                         onKeyUp={ this.handleKeyUp }
                     />
@@ -151,6 +138,7 @@ export default class Layout extends React.Component {
     componentDidMount() {
         try {
             this.refInput.current.focus();
+            this.doScrollToDown();
         } catch (e) {
             console.log('Focus not set');
         }
@@ -170,12 +158,12 @@ export default class Layout extends React.Component {
         
         let myFunction = () => {
             let chatId = this.props.chatId;
-            let previousMessageId = this.state.chats[chatId].messageList.slice(-1)[0]
+            let previousMessageId = this.props.store.chats[chatId].messageList.slice(-1)[0]
             
             setTimeout(() => {
-                    let messageId = this.state.chats[chatId].messageList.slice(-1)[0]; //to get last array's element
+                    let messageId = this.props.store.chats[chatId].messageList.slice(-1)[0]; //to get last array's element
                     if (messageId && previousMessageId === messageId) {
-                        let sender = this.state.messages[messageId].sender;
+                        let sender = this.props.store.messages[messageId].sender;
 
                         if (sender !== 'bot') {
                             this.handleSendMessageBot(chatId, "Don't bother me, I'm a robot!");
@@ -188,3 +176,11 @@ export default class Layout extends React.Component {
         myFunction();
     }
 }
+
+const mapStateToProps = ({ chatReducer }) => ({ store: {
+        chats: chatReducer.chats,
+        messages: chatReducer.messages
+    }});
+const mapDispatchToProps = dispatch => bindActionCreators({ addChat, sendMessage, saveInput }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps) (Layout);

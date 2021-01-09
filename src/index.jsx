@@ -4,12 +4,16 @@ import { BrowserRouter } from 'react-router-dom';
 import Router from './components/Router.jsx'
 import './styles/styles.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { Provider } from 'react-redux';
+import initStore from './utils/store';
 
 ReactDOM.render(
-    <BrowserRouter>
+    <Provider store={ initStore() }>
+        <BrowserRouter>
         <MuiThemeProvider>
             <Router />
         </MuiThemeProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
+    </Provider>,
     document.getElementById('root')
 );
