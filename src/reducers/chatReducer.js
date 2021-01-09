@@ -11,6 +11,23 @@ const initialStore = {
     messages: {
         1: { sender: 'bot', text: "Hi!" },
         2: { sender: 'bot', text: "How are you?" },
+    },
+    profile: {
+        userName: 'My Name',
+        userStatus: 'Status',
+        urlAvatar: '#',
+        card: {
+            1: {
+                title: 'Name photo',
+                subtitle: 'more info about photo',
+                src: '#'
+            }
+        },
+        aboutTitle: 'About me',
+        aboutText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
+            '\nDonec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.' +
+            '\nDonec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.' +
+            '\nAliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.'
     }
 };
 

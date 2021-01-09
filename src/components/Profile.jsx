@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import connect from 'react-redux/es/connect/connect';
+
 import Header from './Header.jsx';
 
 import {Card, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
     static propTypes = {
         userId: PropTypes.number
     }
@@ -18,21 +21,22 @@ export default class Profile extends React.Component {
                 />
                 <Card className="grid-card">
                     <CardHeader
-                    title="My Name"
-                    subtitle="Status"
-                    avatar="#"
+                    title={ this.props.store.profile.userName }
+                    subtitle={ this.props.store.profile.userStatus }
+                    avatar={ this.props.store.profile.urlAvatar }
                     />
                     <CardMedia
-                    overlay={<CardTitle title="Name photo" subtitle="more info about photo" />}
+                    overlay={
+                        <CardTitle 
+                            title={ this.props.store.profile.card[1].title } 
+                            subtitle={ this.props.store.profile.card[1].subtitle } 
+                        />}
                     >
-                    <img height="200px" src="#" alt="" />
+                    <img height="200px" src={ this.props.store.profile.card[1].url } alt="" />
                     </CardMedia>
-                    <CardTitle title="About me" />
+                    <CardTitle title={ this.props.store.profile.aboutTitle } />
                     <CardText>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                    Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                    Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                        {this.props.store.profile.aboutText}
                     </CardText>
                 </Card>
             </div>
@@ -40,3 +44,10 @@ export default class Profile extends React.Component {
         )
     }
 }
+
+const mapStateToProps = ({ chatReducer }) => ({ store: {
+    profile: chatReducer.profile
+}});
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps) (Profile)
