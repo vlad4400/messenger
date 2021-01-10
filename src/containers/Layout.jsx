@@ -6,10 +6,10 @@ import connect from 'react-redux/es/connect/connect';
 
 import { addChat } from '../actions/chatActions';
 import { sendMessage, saveInput } from '../actions/messageActions';
-import Header from './Header.jsx';
-import ChatList from './ChatList.jsx';
-import HeaderInfo from './HeaderInfo.jsx';
-import MessageField from './MessageField.jsx';
+import Header from './Header';
+import ChatList from './ChatList';
+import HeaderInfo from './HeaderInfo';
+import MessageField from './MessageField';
 
 import { TextField, FloatingActionButton } from 'material-ui';
 import SendIcon from 'material-ui/svg-icons/content/send';

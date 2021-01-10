@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import connect from 'react-redux/es/connect/connect';
 
-import Header from './Header.jsx';
+import Header from './Header';
 
 import {Card, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 

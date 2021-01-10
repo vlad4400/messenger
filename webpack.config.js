@@ -5,9 +5,12 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
     entry: {
-        app: "./index.jsx"
+        app: "./"
     },
     context: path.resolve(__dirname, "src"),
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
     devServer: {
         contentBase: path.join(__dirname,"dist"),
         port: 9000,
@@ -26,6 +29,7 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 loader: "babel-loader",
+                exclude: /node_modules/,
                 options: {
                     presets: ["@babel/env", "@babel/react"],
                     plugins: [
