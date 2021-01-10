@@ -18,6 +18,7 @@ module.exports = {
             index: '/index.html'
         }
     },
+    devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
             template: "./index.html"
