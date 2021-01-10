@@ -1,5 +1,5 @@
 import React from 'react';
-import Message from './Message.jsx';
+import Message from '../components/Message/index.jsx';
 
 export default class MessageField extends React.Component {
     render() {
