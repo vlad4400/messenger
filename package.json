@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=development",
-    "start": "webpack-dev-server --mode-development"
+    "build": "webpack",
+    "start": "webpack-dev-server",
+    "dev": "webpack & webpack-dev-server"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
     "material-ui": "^0.20.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
     "style-loader": "^2.0.0"
   }
 }
