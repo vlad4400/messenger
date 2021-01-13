@@ -1,0 +1,87 @@
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+a:hover {
+    color: #eee;
+}
+
+.message-field {
+    display: flex;
+    flex-direction: column;
+    background-color: #e2e2e2;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.grid-header {
+    grid-area: grid-header;
+}
+.grid-chatlist {
+    grid-area: grid-chatlist;
+}
+.grid-headerinfo {
+    grid-area: grid-headerinfo;
+}
+.grid-messagefield {
+    grid-area: grid-messagefield;
+}
+.grid-textfield {
+    grid-area: grid-textfield;
+}
+
+.layout {
+    height: 100%;
+    width: 70%;
+    margin: auto;
+    display: grid;
+    
+    grid-template-areas:
+    "grid-header grid-header"
+    "grid-chatlist grid-headerinfo"
+    "grid-chatlist grid-messagefield"
+    "grid-chatlist grid-textfield";
+    
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 64px 56px auto 64px;
+}
+
+.header-profile,
+.header-chats {
+    margin: 0 20px;
+}
+
+.grid-card {
+    grid-area: grid-card;
+}
+
+.profile {
+    grid-template-areas:
+    "grid-header grid-header"
+    "grid-card grid-card"
+    "grid-card grid-card"
+    "grid-card grid-card";
+}
+
+.message {
+    background-color: lightblue;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 18px;
+    margin: 5px;
+}
+
+.message-sender {
+    color: gray;
+    font-size: 14px;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .layout {
+        width: 100%;
+        grid-template-columns: 0 100%;
+    }
+}

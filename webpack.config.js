@@ -10,13 +10,19 @@ module.exports = {
     context: path.resolve(__dirname, "src"),
     devServer: {
         contentBase: path.join(__dirname,"dist"),
-        port: 9000
+        port: 9000,
+        historyApiFallback: {
+            index: 'index.html',
+            rewrites: [
+                { from: /app.js$/, to: './app.js' }
+            ]
+        }
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: "./index.html"
         }),
-        new CleanWebpackPlugin()
+        // new CleanWebpackPlugin()
     ],
     module: {
         rules: [
@@ -34,6 +40,10 @@ module.exports = {
                         ]
                     ]
                 }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.(html)$/,
