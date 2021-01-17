@@ -63,23 +63,21 @@ class Layout extends React.Component {
     }
 
     handleSendMessage() {
-        const { messages } = this.props.store.messages;
         const { chatId } = this.props;
         const sender = 'me';
         const message = this.props.store.chats[this.props.chatId].input;
         const messageId = ++Object.keys(this.props.store.messages).length;
 
         if (message) {
-            this.props.sendMessage(messageId, sender, message, chatId, messages);
+            this.props.sendMessage(messageId, sender, message, chatId);
         }
     }
 
     handleSendMessageBot(chatId, message) {
-        const { messages } = this.props.store.messages;
         const messageId = ++Object.keys(this.props.store.messages).length;
         const sender = 'bot';
 
-        this.props.sendMessage(messageId, sender, message, chatId, messages);
+        this.props.sendMessage(messageId, sender, message, chatId);
     }
 
     doScrollToDown() {
@@ -155,25 +153,6 @@ class Layout extends React.Component {
         } catch (e) {
             console.log('Focus not set');
         }
-        
-        let myFunction = () => {
-            let chatId = this.props.chatId;
-            let previousMessageId = this.props.store.chats[chatId].messageList.slice(-1)[0]
-            
-            setTimeout(() => {
-                    let messageId = this.props.store.chats[chatId].messageList.slice(-1)[0]; //to get last array's element
-                    if (messageId && previousMessageId === messageId) {
-                        let sender = this.props.store.messages[messageId].sender;
-
-                        if (sender !== 'bot') {
-                            this.handleSendMessageBot(chatId, "Don't bother me, I'm a robot!");
-                        }
-                    }
-                }, 1000
-            );
-        }
-
-        myFunction();
     }
 }
 
