@@ -14,6 +14,10 @@ export default store => next => (action) => {
                         let chatId = action.chatId;
                         store.dispatch(sendMessage(messageId, sender, message, chatId));
                     }
+                    document.querySelector(`.chat-list-${action.chatId}`).style.backgroundColor = "#aaa";
+                    setTimeout(() => {
+                        document.getElementsByClassName(`chat-list-${action.chatId}`)[0].style.backgroundColor = null;
+                    }, 600);
                 }, 1500);
             }
     }

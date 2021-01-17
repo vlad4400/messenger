@@ -44,7 +44,7 @@ export default class ChatList extends React.Component {
                 {
                     Object.keys(this.props.chats).map((chatIndex) =>
                         <Link key={ chatIndex } to={`/chat/${chatIndex}/`}>
-                            <ListItem
+                            <ListItem className={ `chat-list-${chatIndex}` }
                                 primaryText={ this.props.chats[chatIndex].userName }
                                 rightIcon={<CommunicationChatBubble />}
                                 leftAvatar={<Avatar src="" />}
