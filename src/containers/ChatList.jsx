@@ -1,15 +1,22 @@
 import React from 'react';
+import { bindActionCreators } from "redux";
+import connect from "react-redux/es/connect/connect";
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { push } from 'connected-react-router';
+
 import {List, ListItem} from 'material-ui/List';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Avatar from 'material-ui/Avatar';
 import { TextField } from 'material-ui';
 import AddIcon from 'material-ui/svg-icons/content/add';
 
-export default class ChatList extends React.Component {
+import { addChat } from '../actions/chatActions';
+
+class ChatList extends React.Component {
     static propTypes = {
-        addChat: PropTypes.func.isRequired
+        className: PropTypes.string.isRequired,
+        addChat: PropTypes.func.isRequired,
+        push: PropTypes.func.isRequired
     }
 
     state = {
@@ -35,6 +42,10 @@ export default class ChatList extends React.Component {
         }
     }
 
+    handleNavigate = (link) => {
+        this.props.push(link);
+    }
+
     render() {
         return (
             <List
@@ -42,14 +53,13 @@ export default class ChatList extends React.Component {
                 style={ { overflowY: 'scroll' } }
             >
                 {
-                    Object.keys(this.props.chats).map((chatIndex) =>
-                        <Link key={ chatIndex } to={`/chat/${chatIndex}/`}>
-                            <ListItem className={ `chat-list-${chatIndex}` }
-                                primaryText={ this.props.chats[chatIndex].userName }
-                                rightIcon={<CommunicationChatBubble />}
-                                leftAvatar={<Avatar src="" />}
-                            />
-                        </Link>
+                    Object.keys(this.props.store.chats).map((chatId) =>
+                        <ListItem key={ chatId } className={ `chat-list-${chatId}` }
+                            onClick={ () => this.handleNavigate(`/chat/${chatId}`) }
+                            primaryText={ this.props.store.chats[chatId].userName }
+                            rightIcon={<CommunicationChatBubble />}
+                            leftAvatar={<Avatar src="" />}
+                        />
                     )
                 }
                 <ListItem
@@ -71,3 +81,11 @@ export default class ChatList extends React.Component {
         )
     }
 }
+
+const mapStateToProps = ({ chatReducer }) => ({ store: {
+    chats: chatReducer.chats,
+}});
+
+const mapDispatchToProps = dispatch => bindActionCreators({ addChat, push }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps) (ChatList);
