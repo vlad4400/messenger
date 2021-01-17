@@ -25,8 +25,8 @@ function initStore() {
         innitialStore,
         compose (
             applyMiddleware(routerMiddleware(history), ...middlewares),
-            window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : () => {}
-        ),
+            window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : compose
+        )
     );
 
     const persistor = persistStore(store);

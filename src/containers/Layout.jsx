@@ -98,10 +98,7 @@ class Layout extends React.Component {
                     className="grid-header"
                 />
                 <ChatList 
-                    // chats={ this.props.store.chats }
-                    // userName={ this.props.store.chats[this.props.chatId].userName } 
                     className="grid-chatlist"
-                    // addChat={ this.addChat }
                 />
                 <HeaderInfo 
                     className='grid-headerinfo'
