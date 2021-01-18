@@ -16,7 +16,7 @@ class ChatList extends React.Component {
     static propTypes = {
         className: PropTypes.string.isRequired,
         addChat: PropTypes.func.isRequired,
-        push: PropTypes.func.isRequired
+        push: PropTypes.func.isRequired,
     }
 
     state = {
@@ -39,6 +39,10 @@ class ChatList extends React.Component {
         if (this.state.newChatInput.length > 0) {
             this.props.addChat(this.state.newChatInput);
             this.setState({ newChatInput: '' });
+
+            const chatId = Object.keys(this.props.store.chats).length + 1;
+
+            this.props.push(`/chat/${chatId}`);
         }
     }
 

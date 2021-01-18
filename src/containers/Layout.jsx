@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import connect from 'react-redux/es/connect/connect';
+import { push } from 'connected-react-router';
 
 import { addChat } from '../actions/chatActions';
 import { sendMessage, saveInput } from '../actions/messageActions';
@@ -19,30 +19,15 @@ class Layout extends React.Component {
         chatId: PropTypes.number,
         addChat: PropTypes.func.isRequired,
         sendMessage: PropTypes.func.isRequired,
-        saveInput: PropTypes.func.isRequired
+        saveInput: PropTypes.func.isRequired,
+        push: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
         chatId: 1
     }
 
-    state = {
-        redirect: ''
-    };
-
     refInput = React.createRef();
-
-    changeChat = (chatId) => {
-        this.setState({ redirect: `/chat/${chatId}/` });
-    }
-
-    addChat = (userName) => {
-        const { chats } = this.props.store;
-        const chatId = Object.keys(chats).length + 1;
-
-        this.props.addChat(userName);
-        this.changeChat(chatId);
-    };
 
     handleClick = () => {
         this.handleSendMessage();
@@ -86,11 +71,9 @@ class Layout extends React.Component {
     }
 
     render() {
-        if (!this.props.store.chats[this.props.chatId]) {
-            return <Redirect to={'/'} />
-        }
-        if (this.state.redirect) {
-            return <Redirect to={this.state.redirect} />
+        if (!this.props.store.chats[this.props.chatId]) { //check chat if not exist
+            this.props.push('/');
+            return null;
         }
         return (
             <div className="layout">
@@ -140,10 +123,6 @@ class Layout extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.redirect) {
-            this.setState({redirect: ''});
-        }
-
         try {
             this.refInput.current.focus();
             this.doScrollToDown();
@@ -157,6 +136,6 @@ const mapStateToProps = ({ chatReducer }) => ({ store: {
         chats: chatReducer.chats,
         messages: chatReducer.messages
     }});
-const mapDispatchToProps = dispatch => bindActionCreators({ addChat, sendMessage, saveInput }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addChat, sendMessage, saveInput, push }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps) (Layout);
