@@ -18,6 +18,8 @@ export default class MessageField extends React.Component {
                 { this.props.messageList.map((messageIndex, index) => 
                     <Message 
                         key={ index } 
+                        messageId={ messageIndex }
+                        chatId={ this.props.chatId }
                         sender={ this.props.messages[messageIndex].sender } 
                         text={ this.props.messages[messageIndex].text }
                     />) }

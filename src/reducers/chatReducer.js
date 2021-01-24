@@ -1,5 +1,5 @@
 import update from 'react-addons-update';
-import { SEND_MESSAGE, SAVE_INPUT } from '../actions/messageActions';
+import { SEND_MESSAGE, DELETE_MESSAGE, SAVE_INPUT } from '../actions/messageActions';
 import { ADD_CHAT, DELETE_CHAT } from '../actions/chatActions';
 
 const initialStore = {
@@ -45,6 +45,26 @@ export default function chatReducer(store = initialStore, action) {
                     text: action.text}
                 } }
             });
+        }
+        case DELETE_MESSAGE: {
+            const messageList = store.chats[action.chatId].messageList.filter(function(value) {
+                return value !== action.messageId;
+            });
+
+            const { messages: {[action.messageId]:value, ...messages} } = store;
+
+            const newStore = update(store, {
+                chats: {[action.chatId]: {
+                    $merge: {
+                        messageList
+                    }
+                }}
+            });
+
+            return update(newStore, { $merge: {
+                    messages
+                }}
+            );
         }
         case SAVE_INPUT: {
             return update(store, {

@@ -10,3 +10,25 @@
     color: gray;
     font-size: 14px;
 }
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn-delete {
+    margin-left: 10px;
+    color: darkred;
+    font-size: 14px;
+}
+
+.btn-delete:hover {
+    color: black;
+    cursor: pointer;
+}
+
+.btn-delete:active {
+    color: white;
+    cursor: progress;
+}
