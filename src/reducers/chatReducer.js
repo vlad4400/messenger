@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 import { SEND_MESSAGE, SAVE_INPUT } from '../actions/messageActions';
-import { ADD_CHAT } from '../actions/chatActions';
+import { ADD_CHAT, DELETE_CHAT } from '../actions/chatActions';
 
 const initialStore = {
     chats: {
@@ -56,7 +56,9 @@ export default function chatReducer(store = initialStore, action) {
             });
         }
         case ADD_CHAT: {
-            const chatId = Object.keys(store.chats).length + 1;
+            const qunatityChats = Object.keys(store.chats).length;
+            const chatId = qunatityChats ? ++Object.keys(store.chats)[qunatityChats - 1] : 1;
+
             return update(store, {
                 chats: { $merge: {
                     [chatId]: {
@@ -64,6 +66,18 @@ export default function chatReducer(store = initialStore, action) {
                     }
                 } }
             });
+        }
+        case DELETE_CHAT: {
+            const parentKey = 'chats';
+            const childKey = action.chatId;
+            // Remove the 'chats' element from original
+            const { [parentKey]: parentValue, ...noChild } = store;
+            // Remove the 'action.chatId' from the 'chats' element
+            const { [childKey]: removedValue, ...childWithout } = parentValue;
+            // Merge back together
+            const withoutThird = { ...noChild, [parentKey]: childWithout };
+
+            return withoutThird;
         }
         default:
             return store;

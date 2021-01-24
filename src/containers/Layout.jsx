@@ -24,7 +24,7 @@ class Layout extends React.Component {
     };
 
     static defaultProps = {
-        chatId: 1
+        chatId: 0
     }
 
     refInput = React.createRef();
@@ -71,9 +71,14 @@ class Layout extends React.Component {
     }
 
     render() {
-        if (!this.props.store.chats[this.props.chatId]) { //check chat if not exist
-            this.props.push('/');
-            return null;
+        if (!this.props.store.chats[this.props.chatId]) { //check 'chat' if not exist
+            const firstChat = Object.keys(this.props.store.chats)[0];
+            
+            if (firstChat) {
+                return null;
+            } else if (this.props.chatId !== 0) {
+                return null;
+            }
         }
         return (
             <div className="layout">
@@ -82,23 +87,27 @@ class Layout extends React.Component {
                 />
                 <ChatList 
                     className="grid-chatlist"
+                    chatId={ this.props.chatId }
+                    // chats={ this.props.store.chats }
                 />
                 <HeaderInfo 
                     className='grid-headerinfo'
-                    userName={ this.props.store.chats[this.props.chatId].userName }
+                    userName={ this.props.chatId ? this.props.store.chats[this.props.chatId].userName : 'no chat selected' }
                 />
                 <MessageField 
                     className="grid-messagefield" 
+                    chatId={ this.props.chatId }
+                    chats={ this.props.store.chats }
                     messages={ this.props.store.messages } 
-                    userName={ this.props.store.chats[this.props.chatId].userName }
-                    messageList={ this.props.store.chats[this.props.chatId].messageList }
+                    userName={ this.props.chatId ? this.props.store.chats[this.props.chatId].userName : 'no chat selected' }
+                    messageList={ this.props.chatId ? this.props.store.chats[this.props.chatId].messageList : [] }
                 />
                 <div className="grid-textfield" style={ { width: '100%', display: 'flex', marginTop: 10, marginBottom: 15} }>
                     <TextField
                         name="input"
                         ref={ this.refInput }
                         style={ { fontSize: '22px', width: '100%', height: 'none', paddingLeft: 20, paddingRight: 20} }
-                        value={ this.props.store.chats[this.props.chatId].input }
+                        value={ this.props.chatId ? this.props.store.chats[this.props.chatId].input : '' }
                         onChange={ this.handleChange }
                         onKeyUp={ this.handleKeyUp }
                     />
@@ -120,6 +129,16 @@ class Layout extends React.Component {
         } catch (e) {
             console.log('Focus not set');
         }
+
+        if (!this.props.store.chats[this.props.chatId]) { //check 'chat' if not exist
+            const firstChat = Object.keys(this.props.store.chats)[0];
+            
+            if (firstChat) {
+                this.props.push(`/chat/${firstChat}`);
+            } else if (this.props.chatId !== 0) {
+                this.props.push('/chat/0');
+            }
+        }
     }
 
     componentDidUpdate() {
@@ -128,6 +147,16 @@ class Layout extends React.Component {
             this.doScrollToDown();
         } catch (e) {
             console.log('Focus not set');
+        }
+
+        if (!this.props.store.chats[this.props.chatId]) { //check 'chat' if not exist
+            const firstChat = Object.keys(this.props.store.chats)[0];
+            
+            if (firstChat) {
+                this.props.push(`/chat/${firstChat}`);
+            } else if (this.props.chatId !== 0) {
+                this.props.push('/chat/0');
+            }
         }
     }
 }

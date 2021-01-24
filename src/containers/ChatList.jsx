@@ -5,18 +5,25 @@ import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
 
 import {List, ListItem} from 'material-ui/List';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Avatar from 'material-ui/Avatar';
 import { TextField } from 'material-ui';
 import AddIcon from 'material-ui/svg-icons/content/add';
+import {grey400} from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
 
-import { addChat } from '../actions/chatActions';
+import { addChat, deleteChat } from '../actions/chatActions';
 
 class ChatList extends React.Component {
     static propTypes = {
+        chatId: PropTypes.number.isRequired,
         className: PropTypes.string.isRequired,
         addChat: PropTypes.func.isRequired,
+        deleteChat: PropTypes.func.isRequired,
         push: PropTypes.func.isRequired,
+        store: PropTypes.object.isRequired,
     }
 
     state = {
@@ -40,15 +47,40 @@ class ChatList extends React.Component {
             this.props.addChat(this.state.newChatInput);
             this.setState({ newChatInput: '' });
 
-            const chatId = Object.keys(this.props.store.chats).length + 1;
-
+            const chatId = ++Object.keys(this.props.store.chats)[Object.keys(this.props.store.chats).length-1];
+            
             this.props.push(`/chat/${chatId}`);
         }
     }
 
-    handleNavigate = (link) => {
-        this.props.push(link);
+    handleNavigate = (chatId) => {
+        this.props.push(`/chat/${chatId}`);
     }
+
+    iconButtonElement = (
+        <IconButton
+            touch={true}
+            tooltip="more"
+            tooltipPosition="bottom-left"
+        >
+            <MoreVertIcon color={grey400} />
+        </IconButton>
+    );
+
+    handleDeleteChat = (chatId) => {
+        this.props.deleteChat(chatId);
+        if (this.props.chatId == chatId) {
+            this.props.push('/chat/0');
+        }
+    }
+
+    rightIconMenu = chatId => {
+        return (
+            <IconMenu iconButtonElement={this.iconButtonElement}>
+                <MenuItem onClick={ () => { this.handleDeleteChat(chatId) } }>Delete</MenuItem>
+            </IconMenu>
+        );
+    };
 
     render() {
         return (
@@ -59,9 +91,9 @@ class ChatList extends React.Component {
                 {
                     Object.keys(this.props.store.chats).map((chatId) =>
                         <ListItem key={ chatId } className={ `chat-list-${chatId}` }
-                            onClick={ () => this.handleNavigate(`/chat/${chatId}`) }
+                            onClick={ () => this.handleNavigate(chatId) }
                             primaryText={ this.props.store.chats[chatId].userName }
-                            rightIcon={<CommunicationChatBubble />}
+                            rightIconButton={ this.rightIconMenu(chatId) }
                             leftAvatar={<Avatar src="" />}
                         />
                     )
@@ -90,6 +122,6 @@ const mapStateToProps = ({ chatReducer }) => ({ store: {
     chats: chatReducer.chats,
 }});
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addChat, push }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addChat, deleteChat, push }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps) (ChatList);
