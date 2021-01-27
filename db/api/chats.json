@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "userName": "User Name 1", 
+        "messageList": [
+            {
+                "id": 1,
+                "sender": "bot", 
+                "text": "Hi!"
+            },
+            {
+                "id": 2,
+                "sender": "bot",
+                "text": "How are you?"
+            }
+        ],
+        "input": ""
+    },
+    {
+        "id": 2,
+        "userName": "User Name 2", 
+        "messageList": [],
+        "input": ""
+    },
+    {
+        "id": 3,
+        "userName": "User Name 3", 
+        "messageList": [
+            {
+                "id": 3,
+                "sender": "bot", 
+                "text": "Hi!"
+            },
+            {
+                "id": 4,
+                "sender": "bot",
+                "text": "How are you?"
+            }
+        ],
+        "input": ""
+    }
+]

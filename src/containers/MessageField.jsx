@@ -6,20 +6,19 @@ import { connect } from 'react-redux';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import Message from '../components/Message';
-import { loadMessages } from '../actions/messageActions';
+import { loadChats } from '../actions/chatActions';
 
 class MessageField extends React.Component {
     static propTypes = {
         chatId: PropTypes.number.isRequired,
         chats: PropTypes.object.isRequired,
         messages: PropTypes.object,
-        loadMessages: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool.isRequired,
-        isMessagesLoaded: PropTypes.bool.isRequired,
+        loadChats: PropTypes.func.isRequired,
+        isChatsLoaded: PropTypes.bool.isRequired,
     }
 
     render() {
-        if (this.props.isLoading) {
+        if (!this.props.isChatsLoaded) {
             return <CircularProgress />
         }
 
@@ -41,18 +40,18 @@ class MessageField extends React.Component {
     }
 
     componentDidMount() {
-        if (!this.props.isMessagesLoaded) {
-            this.props.loadMessages();
+        if (!this.props.isChatsLoaded) {
+            this.props.loadChats();
         }
     }
 }
 
-const mapStateToProps = ({ messageReducer }) => ({
+const mapStateToProps = ({ chatReducer, messageReducer }) => ({
     messages: messageReducer.messages,
-    isLoading: messageReducer.isLoading,
-    isMessagesLoaded: messageReducer.isMessagesLoaded,
+    isChatsLoaded: chatReducer.isChatsLoaded,
+    isMessagesLoaded: chatReducer.isMessagesLoaded,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ loadMessages }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ loadChats }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps) (MessageField);

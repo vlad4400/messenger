@@ -1,25 +1,35 @@
 import update from 'react-addons-update';
 
-import { 
+import {
     SEND_MESSAGE, 
-    DELETE_MESSAGE, 
-    START_MESSAGES_LOADING,
-    SUCCESS_MESSAGES_LOADING,
-    ERROR_MESSAGES_LOADING
+    DELETE_MESSAGE,
 } from '../actions/messageActions';
-import { ADD_CHAT, DELETE_CHAT, SAVE_INPUT } from '../actions/chatActions';
+import {
+    SUCCESS_CHATS_LOADING,
+    ERROR_CHATS_LOADING,
+    ADD_CHAT, 
+    DELETE_CHAT, 
+    SAVE_INPUT 
+} from '../actions/chatActions';
 
 const initialStore = {
-    isLoading: false,
-    chats: {
-        1: {userName: 'User Name 1', messageList: [], input: ''},
-        2: {userName: 'User Name 2', messageList: [], input: ''},
-        3: {userName: 'User Name 3', messageList: [], input: ''}
-    },
+    chats: {},
+    isChatsLoaded: false,
 };
 
 export default function chatReducer(store = initialStore, action) {
     switch (action.type) {
+        case SUCCESS_CHATS_LOADING: {
+            return update(store, {
+                chats: { $set: action.payload.entities.chats },
+                isChatsLoaded: { $set: true }
+            });
+        }
+        case ERROR_CHATS_LOADING: {
+            return update(store, {
+                isChatsLoaded: { $set: true },
+            });
+        }
         case ADD_CHAT: {
             const qunatityChats = Object.keys(store.chats).length;
             const chatId = qunatityChats ? ++Object.keys(store.chats)[qunatityChats - 1] : 1;
@@ -73,27 +83,6 @@ export default function chatReducer(store = initialStore, action) {
                         messageList
                     }
                 }}
-            });
-        }
-        case START_MESSAGES_LOADING: {
-            return update(store, {
-                isLoading: { $set: true },
-            });
-        }
-        case SUCCESS_MESSAGES_LOADING: {
-            const chats = {...store.chats};
-            action.payload.forEach(msg => {
-                const { id, chatId } = msg;
-                chats[chatId].messageList.push(id);
-            });
-            return update(store, {
-                chats: { $set: chats },
-                isLoading: { $set: false },
-            });
-        }
-        case ERROR_MESSAGES_LOADING: {
-            return update(store, {
-                isLoading: { $set: false },
             });
         }
         default:
