@@ -12,7 +12,7 @@ module.exports = {
         extensions: ['.js', '.jsx']
     },
     devServer: {
-        contentBase: path.join(__dirname,"dist"),
+        contentBase: path.join(__dirname, "db"),
         port: 9000,
         historyApiFallback: {
             index: '/index.html'

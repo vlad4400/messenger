@@ -45,8 +45,8 @@ class Profile extends React.Component {
     }
 }
 
-const mapStateToProps = ({ chatReducer }) => ({ store: {
-    profile: chatReducer.profile
+const mapStateToProps = ({ profileReducer }) => ({ store: {
+    profile: profileReducer.profile
 }});
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
 

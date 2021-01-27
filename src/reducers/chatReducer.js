@@ -1,80 +1,25 @@
 import update from 'react-addons-update';
-import { SEND_MESSAGE, DELETE_MESSAGE, SAVE_INPUT } from '../actions/messageActions';
-import { ADD_CHAT, DELETE_CHAT } from '../actions/chatActions';
+
+import { 
+    SEND_MESSAGE, 
+    DELETE_MESSAGE, 
+    START_MESSAGES_LOADING,
+    SUCCESS_MESSAGES_LOADING,
+    ERROR_MESSAGES_LOADING
+} from '../actions/messageActions';
+import { ADD_CHAT, DELETE_CHAT, SAVE_INPUT } from '../actions/chatActions';
 
 const initialStore = {
+    isLoading: false,
     chats: {
-        1: {userName: 'User Name 1', messageList: [1, 2], input: ''},
+        1: {userName: 'User Name 1', messageList: [], input: ''},
         2: {userName: 'User Name 2', messageList: [], input: ''},
         3: {userName: 'User Name 3', messageList: [], input: ''}
     },
-    messages: {
-        1: { sender: 'bot', text: "Hi!" },
-        2: { sender: 'bot', text: "How are you?" },
-    },
-    profile: {
-        userName: 'My Name',
-        userStatus: 'Status',
-        urlAvatar: '#',
-        card: {
-            1: {
-                title: 'Name photo',
-                subtitle: 'more info about photo',
-                src: '#'
-            }
-        },
-        aboutTitle: 'About me',
-        aboutText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
-            '\nDonec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.' +
-            '\nDonec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.' +
-            '\nAliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.'
-    }
 };
 
 export default function chatReducer(store = initialStore, action) {
     switch (action.type) {
-        case SEND_MESSAGE: {
-            return update(store, {
-                chats: { $merge: { [action.chatId]: {
-                    userName: store.chats[action.chatId].userName,
-                    messageList: [...store.chats[action.chatId].messageList, action.messageId],
-                    input: ''
-                } } },
-                messages: { $merge: { [action.messageId] : {
-                    sender: action.sender, 
-                    text: action.text}
-                } }
-            });
-        }
-        case DELETE_MESSAGE: {
-            const messageList = store.chats[action.chatId].messageList.filter(function(value) {
-                return value !== action.messageId;
-            });
-
-            const { messages: {[action.messageId]:value, ...messages} } = store;
-
-            const newStore = update(store, {
-                chats: {[action.chatId]: {
-                    $merge: {
-                        messageList
-                    }
-                }}
-            });
-
-            return update(newStore, { $merge: {
-                    messages
-                }}
-            );
-        }
-        case SAVE_INPUT: {
-            return update(store, {
-                chats: { $merge: { [action.chatId]: {
-                    userName: store.chats[action.chatId].userName,
-                    messageList: store.chats[action.chatId].messageList,
-                    input: action.input
-                } } }
-            });
-        }
         case ADD_CHAT: {
             const qunatityChats = Object.keys(store.chats).length;
             const chatId = qunatityChats ? ++Object.keys(store.chats)[qunatityChats - 1] : 1;
@@ -98,6 +43,58 @@ export default function chatReducer(store = initialStore, action) {
             const withoutThird = { ...noChild, [parentKey]: childWithout };
 
             return withoutThird;
+        }
+        case SAVE_INPUT: {
+            return update(store, {
+                chats: { $merge: { [action.chatId]: {
+                    userName: store.chats[action.chatId].userName,
+                    messageList: store.chats[action.chatId].messageList,
+                    input: action.input
+                } } }
+            });
+        }
+        case SEND_MESSAGE: {
+            return update(store, {
+                chats: { $merge: { [action.chatId]: {
+                    userName: store.chats[action.chatId].userName,
+                    messageList: [...store.chats[action.chatId].messageList, action.messageId],
+                    input: ''
+                } } }
+            });
+        }
+        case DELETE_MESSAGE: {
+            const messageList = store.chats[action.chatId].messageList.filter(function(value) {
+                return value !== action.messageId;
+            });
+
+            return update(store, {
+                chats: {[action.chatId]: {
+                    $merge: {
+                        messageList
+                    }
+                }}
+            });
+        }
+        case START_MESSAGES_LOADING: {
+            return update(store, {
+                isLoading: { $set: true },
+            });
+        }
+        case SUCCESS_MESSAGES_LOADING: {
+            const chats = {...store.chats};
+            action.payload.forEach(msg => {
+                const { id, chatId } = msg;
+                chats[chatId].messageList.push(id);
+            });
+            return update(store, {
+                chats: { $set: chats },
+                isLoading: { $set: false },
+            });
+        }
+        case ERROR_MESSAGES_LOADING: {
+            return update(store, {
+                isLoading: { $set: false },
+            });
         }
         default:
             return store;

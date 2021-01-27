@@ -5,7 +5,8 @@ import connect from 'react-redux/es/connect/connect';
 import { push } from 'connected-react-router';
 
 import { addChat } from '../actions/chatActions';
-import { sendMessage, saveInput } from '../actions/messageActions';
+import { sendMessage } from '../actions/messageActions';
+import { saveInput } from '../actions/chatActions';
 import Header from './Header';
 import ChatList from './ChatList';
 import HeaderInfo from './HeaderInfo';
@@ -161,9 +162,9 @@ class Layout extends React.Component {
     }
 }
 
-const mapStateToProps = ({ chatReducer }) => ({ store: {
+const mapStateToProps = ({ messageReducer, chatReducer }) => ({ store: {
         chats: chatReducer.chats,
-        messages: chatReducer.messages
+        messages: messageReducer.messages
     }});
 const mapDispatchToProps = dispatch => bindActionCreators({ addChat, sendMessage, saveInput, push }, dispatch);
 

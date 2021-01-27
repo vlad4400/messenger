@@ -6,7 +6,7 @@ export default store => next => (action) => {
             if (action.sender === 'me') {
                 setTimeout(() => {
                     let lastMessageId = store.getState().chatReducer.chats[action.chatId].messageList.slice(-1)[0]; //to get last array's element
-                    let sender = store.getState().chatReducer.messages[lastMessageId].sender;
+                    let sender = store.getState().messageReducer.messages[lastMessageId].sender;
                     if (action.messageId == lastMessageId && sender !== 'bot') {
                         let messageId = ++lastMessageId;
                         let sender = 'bot';
