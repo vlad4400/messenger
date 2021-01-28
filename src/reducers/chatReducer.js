@@ -6,7 +6,6 @@ import {
 } from '../actions/messageActions';
 import {
     SUCCESS_CHATS_LOADING,
-    ERROR_CHATS_LOADING,
     ADD_CHAT, 
     DELETE_CHAT, 
     SAVE_INPUT 
@@ -23,11 +22,6 @@ export default function chatReducer(store = initialStore, action) {
             return update(store, {
                 chats: { $set: action.payload.entities.chats },
                 isChatsLoaded: { $set: true }
-            });
-        }
-        case ERROR_CHATS_LOADING: {
-            return update(store, {
-                isChatsLoaded: { $set: true },
             });
         }
         case ADD_CHAT: {
