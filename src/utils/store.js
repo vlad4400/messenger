@@ -20,8 +20,11 @@ const persistConfig = {
 function initStore() {
     const innitialStore = {};
 
-    const store = createStore(
-        persistReducer(persistConfig, createRootReducer(history)),
+    return createStore(
+        createRootReducer(history),
+
+    // const store = createStore(
+    //     persistReducer(persistConfig, createRootReducer(history)),
         innitialStore,
         compose (
             applyMiddleware(routerMiddleware(history), ...middlewares),

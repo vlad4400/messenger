@@ -13,14 +13,14 @@ import './styles/styles.css';
 const { store, persistor } = initStore();
 
 ReactDOM.render(
-    <Provider store={ store }>
-        <PersistGate loading={ null } persistor={ persistor }>
+    <Provider store={ initStore() }>
+        {/* <PersistGate loading={ null } persistor={ persistor }> */}
             <ConnectedRouter history={ history }>
                 <MuiThemeProvider>
                     <Router />
                 </MuiThemeProvider>
             </ConnectedRouter>
-        </PersistGate>
+        {/* </PersistGate> */}
     </Provider>,
     document.getElementById('root')
 );
