@@ -1,28 +1,20 @@
-import update from 'react-addons-update';
+import {
+    SUCCESS_PROFILE_LOADING,
+} from '../actions/profileActions';
 
 const initialStore = {
-    profile: {
-        isChatLoading: true,
-        userName: 'My Name',
-        userStatus: 'Status',
-        urlAvatar: '#',
-        card: {
-            1: {
-                title: 'Name photo',
-                subtitle: 'more info about photo',
-                src: '#'
-            }
-        },
-        aboutTitle: 'About me',
-        aboutText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
-            '\nDonec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.' +
-            '\nDonec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.' +
-            '\nAliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.'
-    },
+    profile: {},
+    isProfileLoaded: false,
 };
 
 export default function profileReducer(store = initialStore, action) {
     switch (action.type) {
+        case SUCCESS_PROFILE_LOADING: {
+            return { 
+                profile: action.payload.profile, 
+                isProfileLoaded: true 
+            };
+        }
         default:
             return store;
     }
