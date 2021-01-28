@@ -3,25 +3,16 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import CircularProgress from 'material-ui/CircularProgress';
-
 import Message from '../components/Message';
-import { loadChats } from '../actions/chatActions';
 
 class MessageField extends React.Component {
     static propTypes = {
         chatId: PropTypes.number.isRequired,
         chats: PropTypes.object.isRequired,
         messages: PropTypes.object,
-        loadChats: PropTypes.func.isRequired,
-        isChatsLoaded: PropTypes.bool.isRequired,
     }
 
     render() {
-        if (!this.props.isChatsLoaded) {
-            return <CircularProgress />
-        }
-
         if (!this.props.chats[this.props.chatId]) {
             return '';
         }
@@ -38,20 +29,12 @@ class MessageField extends React.Component {
             </div>
         )
     }
-
-    componentDidMount() {
-        if (!this.props.isChatsLoaded) {
-            this.props.loadChats();
-        }
-    }
 }
 
 const mapStateToProps = ({ chatReducer, messageReducer }) => ({
     messages: messageReducer.messages,
-    isChatsLoaded: chatReducer.isChatsLoaded,
-    isMessagesLoaded: chatReducer.isMessagesLoaded,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ loadChats }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps) (MessageField);

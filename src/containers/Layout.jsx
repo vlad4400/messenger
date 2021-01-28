@@ -4,9 +4,12 @@ import { bindActionCreators } from 'redux';
 import connect from 'react-redux/es/connect/connect';
 import { push } from 'connected-react-router';
 
-import { addChat } from '../actions/chatActions';
+import { 
+    loadChats, 
+    addChat,
+    saveInput
+} from '../actions/chatActions';
 import { sendMessage } from '../actions/messageActions';
-import { saveInput } from '../actions/chatActions';
 import Header from './Header';
 import ChatList from './ChatList';
 import HeaderInfo from './HeaderInfo';
@@ -19,6 +22,9 @@ class Layout extends React.Component {
     static propTypes = {
         chatId: PropTypes.number,
         addChat: PropTypes.func.isRequired,
+        chats: PropTypes.object.isRequired,
+        messages: PropTypes.object.isRequired,
+        isChatsLoaded: PropTypes.bool.isRequired,
         sendMessage: PropTypes.func.isRequired,
         saveInput: PropTypes.func.isRequired,
         push: PropTypes.func.isRequired,
@@ -51,8 +57,8 @@ class Layout extends React.Component {
     handleSendMessage() {
         const { chatId } = this.props;
         const sender = 'me';
-        const message = this.props.store.chats[this.props.chatId].input;
-        const messageId = ++Object.keys(this.props.store.messages).length;
+        const message = this.props.chats[this.props.chatId].input;
+        const messageId = ++Object.keys(this.props.messages).length;
 
         if (message) {
             this.props.sendMessage(messageId, sender, message, chatId);
@@ -60,7 +66,7 @@ class Layout extends React.Component {
     }
 
     handleSendMessageBot(chatId, message) {
-        const messageId = ++Object.keys(this.props.store.messages).length;
+        const messageId = ++Object.keys(this.props.messages).length;
         const sender = 'bot';
 
         this.props.sendMessage(messageId, sender, message, chatId);
@@ -72,8 +78,8 @@ class Layout extends React.Component {
     }
 
     render() {
-        if (!this.props.store.chats[this.props.chatId]) { //check 'chat' if not exist
-            const firstChat = Object.keys(this.props.store.chats)[0];
+        if (!this.props.chats[this.props.chatId]) { //check 'chat' if not exist
+            const firstChat = Object.keys(this.props.chats)[0];
             
             if (firstChat) {
                 return null;
@@ -89,26 +95,26 @@ class Layout extends React.Component {
                 <ChatList 
                     className="grid-chatlist"
                     chatId={ this.props.chatId }
-                    // chats={ this.props.store.chats }
+                    // chats={ this.props.chats }
                 />
                 <HeaderInfo 
                     className='grid-headerinfo'
-                    userName={ this.props.chatId ? this.props.store.chats[this.props.chatId].userName : 'no chat selected' }
+                    userName={ this.props.chatId ? this.props.chats[this.props.chatId].userName : 'no chat selected' }
                 />
                 <MessageField 
                     className="grid-messagefield" 
                     chatId={ this.props.chatId }
-                    chats={ this.props.store.chats }
-                    messages={ this.props.store.messages } 
-                    userName={ this.props.chatId ? this.props.store.chats[this.props.chatId].userName : 'no chat selected' }
-                    messageList={ this.props.chatId ? this.props.store.chats[this.props.chatId].messageList : [] }
+                    chats={ this.props.chats }
+                    messages={ this.props.messages } 
+                    userName={ this.props.chatId ? this.props.chats[this.props.chatId].userName : 'no chat selected' }
+                    messageList={ this.props.chatId ? this.props.chats[this.props.chatId].messageList : [] }
                 />
                 <div className="grid-textfield" style={ { width: '100%', display: 'flex', marginTop: 10, marginBottom: 15} }>
                     <TextField
                         name="input"
                         ref={ this.refInput }
                         style={ { fontSize: '22px', width: '100%', height: 'none', paddingLeft: 20, paddingRight: 20} }
-                        value={ this.props.chatId ? this.props.store.chats[this.props.chatId].input : '' }
+                        value={ this.props.chatId ? this.props.chats[this.props.chatId].input : '' }
                         onChange={ this.handleChange }
                         onKeyUp={ this.handleKeyUp }
                     />
@@ -131,8 +137,13 @@ class Layout extends React.Component {
             console.log('Focus not set');
         }
 
-        if (!this.props.store.chats[this.props.chatId]) { //check 'chat' if not exist
-            const firstChat = Object.keys(this.props.store.chats)[0];
+        if (!this.props.isChatsLoaded) {
+            this.props.loadChats();
+            return null;
+        }
+
+        if (!this.props.chats[this.props.chatId]) { //check 'chat' if not exist
+            const firstChat = Object.keys(this.props.chats)[0];
             
             if (firstChat) {
                 this.props.push(`/chat/${firstChat}`);
@@ -150,8 +161,8 @@ class Layout extends React.Component {
             console.log('Focus not set');
         }
 
-        if (!this.props.store.chats[this.props.chatId]) { //check 'chat' if not exist
-            const firstChat = Object.keys(this.props.store.chats)[0];
+        if (!this.props.chats[this.props.chatId]) { //check 'chat' if not exist
+            const firstChat = Object.keys(this.props.chats)[0];
             
             if (firstChat) {
                 this.props.push(`/chat/${firstChat}`);
@@ -162,10 +173,11 @@ class Layout extends React.Component {
     }
 }
 
-const mapStateToProps = ({ messageReducer, chatReducer }) => ({ store: {
+const mapStateToProps = ({ messageReducer, chatReducer }) => ({
         chats: chatReducer.chats,
-        messages: messageReducer.messages
-    }});
-const mapDispatchToProps = dispatch => bindActionCreators({ addChat, sendMessage, saveInput, push }, dispatch);
+        messages: messageReducer.messages,
+        isChatsLoaded: chatReducer.isChatsLoaded,
+    });
+const mapDispatchToProps = dispatch => bindActionCreators({ loadChats, addChat, sendMessage, saveInput, push }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps) (Layout);
