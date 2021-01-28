@@ -14,17 +14,17 @@ const persistConfig = {
     key: 'messanger-store',
     storage,
     stateReconciler: autoMergeLevel2,
-    whitelist: ['chatReducer'],
+    whitelist: ['chatReducer', 'messageReducer', 'profileReducer'],
 }
 
 function initStore() {
     const innitialStore = {};
 
-    return createStore(
-        createRootReducer(history),
+    // return createStore(
+    //     createRootReducer(history),
 
-    // const store = createStore(
-    //     persistReducer(persistConfig, createRootReducer(history)),
+    const store = createStore(
+        persistReducer(persistConfig, createRootReducer(history)),
         innitialStore,
         compose (
             applyMiddleware(routerMiddleware(history), ...middlewares),
