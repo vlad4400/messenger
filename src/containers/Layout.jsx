@@ -14,6 +14,7 @@ import Header from './Header';
 import ChatList from './ChatList';
 import HeaderInfo from './HeaderInfo';
 import MessageField from './MessageField';
+import InstallPopup from '../components/InstallPopup';
 
 import { TextField, FloatingActionButton } from 'material-ui';
 import SendIcon from 'material-ui/svg-icons/content/send';
@@ -125,6 +126,7 @@ class Layout extends React.Component {
                         <SendIcon />
                     </FloatingActionButton>
                 </div>
+                <InstallPopup />
             </div>
         )
     }
