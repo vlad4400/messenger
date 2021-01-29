@@ -19,14 +19,15 @@ self.addEventListener('install', function(event) {
     if (doCache) {
         event.waitUntil(
             caches.open(CACHE_NAME).then(function(cache) {
-                fetch('manifest/manifest.json')
+                fetch('/manifest/manifest.json')
                     .then(response => {
                         response.json()
                     })
                     .then(assets => {
                         const urlsToCache = [
-                            '',
+                            '/',
                             '/chat/*',
+                            '/profile',
                         ];
                         cache.addAll(urlsToCache);
                         console.log('cached');
