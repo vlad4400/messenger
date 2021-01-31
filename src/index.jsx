@@ -8,6 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Router from './containers/Router'
 import initStore, { history } from './utils/store';
+import { notifications } from './notifications';
 import './styles/styles.css';
 
 const { store, persistor } = initStore();
@@ -24,3 +25,7 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
+
+window.onload = () => {
+    notifications(window);
+};

@@ -18,5 +18,6 @@
     "theme_color": "#7ACCE5",
     "orientation": "any",
     "display": "standalone",
-    "prefer_related_applications": true
+    "prefer_related_applications": true,
+    "gcm_sender_id": "1234567890"
 }

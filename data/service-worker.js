@@ -46,3 +46,20 @@ self.addEventListener('fetch', function(event) {
         );
     }
 });
+
+self.addEventListener('push', function(event) {
+
+    console.info('Event: Push');
+
+    var title = 'Here a new push has arrived!';
+
+    var body = {
+    'body': 'Click here to open',
+    'tag': 'pwa',
+    'icon': './manifest/logo-pwa-48.png'
+    };
+
+    event.waitUntil(
+    self.registration.showNotification(title, body)
+    );
+});

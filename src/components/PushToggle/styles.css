@@ -1,0 +1,13 @@
+.push {
+    margin: 5px;
+    opacity: .3;
+}
+
+.push:hover {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.push:active {
+    cursor: wait;
+}
