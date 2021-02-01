@@ -6,7 +6,7 @@ import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 
 export default class HeaderInfo extends React.Component {
     static propTypes = {
-        classNmae: PropTypes.string.isRequired,
+        className: PropTypes.string.isRequired,
         userName: PropTypes.string.isRequired
     };
 

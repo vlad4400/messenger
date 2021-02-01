@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import PushToggle from '../components/PushToggle';
 import AppBar from 'material-ui/AppBar';
 // import IconButton from 'material-ui/IconButton';
 // import NavigationExpandMore from 'material-ui/svg-icons/navigation/menu';
@@ -12,6 +13,7 @@ export default class Header extends React.Component {
                 className={ this.props.className }
                 title={ 
                     <>
+                        <PushToggle />
                         <Link to={`/profile/`}>
                             <span className="header-profile">Profile</span>
                         </Link>

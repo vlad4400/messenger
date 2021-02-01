@@ -5,30 +5,32 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
     entry: {
-        app: "./index.jsx"
+        app: "./"
     },
     context: path.resolve(__dirname, "src"),
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
     devServer: {
-        contentBase: path.join(__dirname,"dist"),
+        contentBase: path.join(__dirname, "data"),
         port: 9000,
         historyApiFallback: {
-            index: 'index.html',
-            rewrites: [
-                { from: /app.js$/, to: './app.js' }
-            ]
+            index: '/index.html'
         }
     },
+    devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
             template: "./index.html"
         }),
-        // new CleanWebpackPlugin()
+        new CleanWebpackPlugin()
     ],
     module: {
         rules: [
             {
                 test: /\.(js|jsx)$/,
                 loader: "babel-loader",
+                exclude: /node_modules/,
                 options: {
                     presets: ["@babel/env", "@babel/react"],
                     plugins: [
@@ -53,6 +55,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "app.js"
+        filename: "./[name].bundle.js",
+        publicPath: '/'
     }
 }
